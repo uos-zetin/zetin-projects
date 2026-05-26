@@ -36,7 +36,8 @@ export default function FilterBar({ categories, years, value, onChange }) {
         className="filter-bar__search"
         type="search"
         placeholder="검색"
-        value={value.query}
+        aria-label="검색"
+        value={value.query ?? ''}
         onChange={(e) => onChange({ ...value, query: e.target.value })}
       />
     </div>

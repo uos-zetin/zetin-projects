@@ -213,6 +213,13 @@ button { font-family: inherit; color: inherit; }
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
+.card__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--bg-2);
+}
 .card__flag {
   position: absolute;
   top: 10px;
@@ -322,6 +329,22 @@ button { font-family: inherit; color: inherit; }
   padding: 24px 32px 0;
 }
 .drawer__hero .ph { border-radius: var(--radius-lg); }
+.drawer__heroimg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  background: var(--bg-2);
+}
+.drawer__gimg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--bg-2);
+}
 
 .drawer__body {
   padding: 28px 32px 56px;

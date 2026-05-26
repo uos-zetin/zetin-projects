@@ -1,12 +1,22 @@
 import Placeholder from './Placeholder.jsx';
+import { resolveAsset } from '../lib/asset.js';
 
-// Editorial grid card: striped thumb + monospace index/category/year row + title + summary.
+// Editorial grid card: thumbnail (real photo or striped placeholder) + meta row + title + summary.
 export default function ProjectCard({ project, index = 0, onSelect }) {
   const idx = String(index + 1).padStart(2, '0');
   return (
     <button type="button" className="card" onClick={() => onSelect(project)}>
       <div className="card__thumb">
-        <Placeholder label={project.title} seed={index} ratio="4/3" />
+        {project.thumbnail ? (
+          <img
+            className="card__img"
+            src={resolveAsset(project.thumbnail)}
+            alt={project.title}
+            loading="lazy"
+          />
+        ) : (
+          <Placeholder label={project.title} seed={index} ratio="4/3" />
+        )}
         {project.featured && <span className="card__flag">FEATURED</span>}
       </div>
       <div className="card__body">

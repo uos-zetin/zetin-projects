@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Placeholder from './Placeholder.jsx';
+import { resolveAsset } from '../lib/asset.js';
 
 const isGithub = (link) => /github/i.test(link.url || '') || /github/i.test(link.label || '');
 
@@ -46,7 +47,15 @@ export default function ProjectDetail({ project, onClose, seed = 0 }) {
         </header>
 
         <div className="drawer__hero">
-          <Placeholder label={project.title} seed={seed} ratio="16/9" />
+          {project.thumbnail || project.images?.[0] ? (
+            <img
+              className="drawer__heroimg"
+              src={resolveAsset(project.thumbnail || project.images[0])}
+              alt={project.title}
+            />
+          ) : (
+            <Placeholder label={project.title} seed={seed} ratio="16/9" />
+          )}
         </div>
 
         <div className="drawer__body">
@@ -96,9 +105,17 @@ export default function ProjectDetail({ project, onClose, seed = 0 }) {
           <section className="drawer__sec">
             <h4>제작 사진</h4>
             <div className="drawer__grid">
-              <Placeholder label="제작 과정 1" seed={seed + 1} ratio="4/3" />
-              <Placeholder label="제작 과정 2" seed={seed + 2} ratio="4/3" />
-              <Placeholder label="대회 현장" seed={seed + 3} ratio="4/3" />
+              {project.images?.length > 0 ? (
+                project.images.map((src, i) => (
+                  <img key={src} className="drawer__gimg" src={resolveAsset(src)} alt={`${project.title} ${i + 1}`} loading="lazy" />
+                ))
+              ) : (
+                <>
+                  <Placeholder label="제작 과정 1" seed={seed + 1} ratio="4/3" />
+                  <Placeholder label="제작 과정 2" seed={seed + 2} ratio="4/3" />
+                  <Placeholder label="대회 현장" seed={seed + 3} ratio="4/3" />
+                </>
+              )}
             </div>
           </section>
 

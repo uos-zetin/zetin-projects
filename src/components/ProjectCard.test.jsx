@@ -22,4 +22,10 @@ describe('ProjectCard', () => {
     await userEvent.click(screen.getByRole('button', { name: /라인트레이서/ }));
     expect(onSelect).toHaveBeenCalledWith(p);
   });
+
+  it('thumbnail이 있으면 이미지를 렌더링한다', () => {
+    render(<ProjectCard project={{ ...p, thumbnail: 'data/images/x.jpg' }} index={0} onSelect={() => {}} />);
+    const img = screen.getByRole('img', { name: '라인트레이서' });
+    expect(img).toHaveAttribute('src', expect.stringContaining('data/images/x.jpg'));
+  });
 });

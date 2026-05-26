@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { getCategories, getYears, filterProjects, sortProjects } from './filter.js';
+import { getCategories, getYears, getCounts, filterProjects, sortProjects } from './filter.js';
 
 const sample = [
-  { id: 'a', category: 'robot', year: 2024, featured: true, title: '로봇', summary: '빠름' },
+  { id: 'a', category: 'robot', year: 2024, featured: true, title: '로봇', summary: '빠름', members: ['홍길동'] },
   { id: 'b', category: 'micromouse', year: 2023, featured: false, title: '마우스', summary: '미로' },
   { id: 'c', category: 'robot', year: 2022, featured: false, title: '구형', summary: '느림' },
 ];
@@ -19,6 +19,12 @@ describe('getYears', () => {
   });
 });
 
+describe('getCounts', () => {
+  it('전체 수와 카테고리별 수를 반환한다', () => {
+    expect(getCounts(sample)).toEqual({ all: 3, byCat: { robot: 2, micromouse: 1 } });
+  });
+});
+
 describe('filterProjects', () => {
   it('카테고리로 필터링한다', () => {
     expect(filterProjects(sample, { category: 'robot' }).map((p) => p.id)).toEqual(['a', 'c']);
@@ -29,13 +35,16 @@ describe('filterProjects', () => {
   it('검색어(title/summary)로 필터링한다', () => {
     expect(filterProjects(sample, { query: '미로' }).map((p) => p.id)).toEqual(['b']);
   });
+  it('검색어로 부원 이름도 매칭한다', () => {
+    expect(filterProjects(sample, { query: '홍길동' }).map((p) => p.id)).toEqual(['a']);
+  });
   it('필터 없으면 전체 반환', () => {
     expect(filterProjects(sample, {}).length).toBe(3);
   });
 });
 
 describe('sortProjects', () => {
-  it('featured 먼저, 그다음 연도 내림차순', () => {
+  it('연도 내림차순으로 정렬한다(최신순)', () => {
     expect(sortProjects(sample).map((p) => p.id)).toEqual(['a', 'b', 'c']);
   });
 });

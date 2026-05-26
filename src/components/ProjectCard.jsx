@@ -1,16 +1,22 @@
-export default function ProjectCard({ project, onSelect }) {
+import Placeholder from './Placeholder.jsx';
+
+// Editorial grid card: striped thumb + monospace index/category/year row + title + summary.
+export default function ProjectCard({ project, index = 0, onSelect }) {
+  const idx = String(index + 1).padStart(2, '0');
   return (
-    <button type="button" className="project-card" onClick={() => onSelect(project)}>
-      {project.thumbnail && (
-        <img className="project-card__thumb" src={project.thumbnail} alt="" loading="lazy" />
-      )}
-      <div className="project-card__body">
-        <h3 className="project-card__title">{project.title}</h3>
-        <div className="project-card__meta">
-          <span className="project-card__year">{project.year}</span>
-          {project.category && <span className="project-card__cat">{project.category}</span>}
+    <button type="button" className="card" onClick={() => onSelect(project)}>
+      <div className="card__thumb">
+        <Placeholder label={project.title} seed={index} ratio="4/3" />
+        {project.featured && <span className="card__flag">FEATURED</span>}
+      </div>
+      <div className="card__body">
+        <div className="card__row">
+          <span className="card__idx">{idx}</span>
+          {project.category && <span className="card__cat">{project.category}</span>}
+          <span className="card__year">{project.year}</span>
         </div>
-        <p className="project-card__summary">{project.summary}</p>
+        <h3 className="card__title">{project.title}</h3>
+        <p className="card__sum">{project.summary}</p>
       </div>
     </button>
   );

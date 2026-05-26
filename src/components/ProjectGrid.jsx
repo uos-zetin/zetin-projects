@@ -1,13 +1,11 @@
 import ProjectCard from './ProjectCard.jsx';
 
+// Renders the project cards in a grid. Empty state is handled by the parent (App).
 export default function ProjectGrid({ projects = [], onSelect }) {
-  if (projects.length === 0) {
-    return <p className="project-grid__empty">표시할 프로젝트가 없습니다.</p>;
-  }
   return (
-    <div className="project-grid">
-      {projects.map((p) => (
-        <ProjectCard key={p.id} project={p} onSelect={onSelect} />
+    <div className="grid">
+      {projects.map((p, i) => (
+        <ProjectCard key={p.id} project={p} index={i} onSelect={onSelect} />
       ))}
     </div>
   );

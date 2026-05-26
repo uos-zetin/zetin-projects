@@ -1,0 +1,30 @@
+{
+  "projects": [
+    {
+      "id": "line-tracer-2024",
+      "title": "라인트레이서 2024",
+      "category": "robot",
+      "year": 2024,
+      "members": ["홍길동", "김철수"],
+      "summary": "STM32 기반 고속 라인트레이서",
+      "description": "## 개요\n2024년에 제작한 라인트레이서입니다.",
+      "thumbnail": "data/images/sample.jpg",
+      "images": [],
+      "links": [{ "label": "원본 글", "url": "https://zetin.uos.ac.kr/robot/1" }],
+      "featured": true
+    },
+    {
+      "id": "micromouse-2023",
+      "title": "마이크로마우스 2023",
+      "category": "micromouse",
+      "year": 2023,
+      "members": ["이영희"],
+      "summary": "미로 탐색 마우스",
+      "description": "마이크로마우스 프로젝트.",
+      "thumbnail": "data/images/sample.jpg",
+      "images": [],
+      "links": [],
+      "featured": false
+    }
+  ]
+}

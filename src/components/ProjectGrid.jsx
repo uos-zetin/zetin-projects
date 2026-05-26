@@ -4,8 +4,8 @@ import ProjectCard from './ProjectCard.jsx';
 export default function ProjectGrid({ projects = [], onSelect }) {
   return (
     <div className="grid">
-      {projects.map((p, i) => (
-        <ProjectCard key={p.id} project={p} index={i} onSelect={onSelect} />
+      {projects.map((p) => (
+        <ProjectCard key={p.id} project={p} onSelect={onSelect} />
       ))}
     </div>
   );

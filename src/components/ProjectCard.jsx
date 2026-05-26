@@ -1,31 +1,24 @@
 import Placeholder from './Placeholder.jsx';
 import { resolveAsset } from '../lib/asset.js';
 
-// Editorial grid card: thumbnail (real photo or striped placeholder) + meta row + title + summary.
-export default function ProjectCard({ project, index = 0, onSelect }) {
-  const idx = String(index + 1).padStart(2, '0');
+// Simple card: thumbnail (real photo or plain placeholder) + title + category·year + summary.
+export default function ProjectCard({ project, onSelect }) {
   return (
     <button type="button" className="card" onClick={() => onSelect(project)}>
       <div className="card__thumb">
         {project.thumbnail ? (
-          <img
-            className="card__img"
-            src={resolveAsset(project.thumbnail)}
-            alt={project.title}
-            loading="lazy"
-          />
+          <img className="card__img" src={resolveAsset(project.thumbnail)} alt={project.title} loading="lazy" />
         ) : (
-          <Placeholder label={project.title} seed={index} ratio="4/3" />
+          <Placeholder label={project.title} ratio="4/3" />
         )}
-        {project.featured && <span className="card__flag">FEATURED</span>}
       </div>
       <div className="card__body">
-        <div className="card__row">
-          <span className="card__idx">{idx}</span>
-          {project.category && <span className="card__cat">{project.category}</span>}
-          <span className="card__year">{project.year}</span>
-        </div>
         <h3 className="card__title">{project.title}</h3>
+        <p className="card__meta">
+          {project.category && <span>{project.category}</span>}
+          {project.category && project.year ? ' · ' : ''}
+          {project.year && <span>{project.year}</span>}
+        </p>
         <p className="card__sum">{project.summary}</p>
       </div>
     </button>

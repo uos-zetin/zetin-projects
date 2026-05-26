@@ -271,65 +271,35 @@ button { font-family: inherit; color: inherit; }
   overflow: hidden;
 }
 
-/* Drawer (Detail) */
-.drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: oklch(0.20 0.01 240 / 0.40);
-  backdrop-filter: blur(6px);
-  display: flex;
-  justify-content: flex-end;
-  z-index: 50;
-  animation: fade 0.2s ease;
+/* Detail page (classic navigation) */
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-top: 8px;
 }
-@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-.drawer {
-  width: min(680px, 100%);
-  background: var(--bg);
-  height: 100%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  animation: slide 0.35s cubic-bezier(.2,.7,.2,1);
-}
-@keyframes slide { from { transform: translateX(20px); opacity: 0; } to { transform: none; opacity: 1; } }
-
-.drawer__top {
+.page__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 32px;
+  padding: 16px 0 24px;
   border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 0;
-  background: var(--bg);
-  z-index: 2;
 }
-.drawer__crumb {
+.page__back {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.page__back:hover { color: var(--ink); }
+.page__crumb {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.08em;
   color: var(--ink-3);
 }
-.drawer__close {
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--line);
-  background: transparent;
-  border-radius: 999px;
-  cursor: pointer;
-  color: var(--ink-2);
-}
-.drawer__close:hover { color: var(--ink); border-color: var(--ink-2); }
-
-.drawer__hero {
-  padding: 24px 32px 0;
-}
-.drawer__hero .ph { border-radius: var(--radius-lg); }
-.drawer__heroimg {
+.page__hero { margin: 24px 0 28px; }
+.page__hero .ph { border-radius: var(--radius-lg); }
+.page__heroimg {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -337,32 +307,17 @@ button { font-family: inherit; color: inherit; }
   border-radius: var(--radius-lg);
   background: var(--bg-2);
 }
-.drawer__gimg {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--radius);
-  background: var(--bg-2);
-}
-
-.drawer__body {
-  padding: 28px 32px 56px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-.drawer__title {
-  font-size: 32px;
+.page__title {
+  font-size: clamp(28px, 4vw, 40px);
   letter-spacing: -0.02em;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 12px;
   line-height: 1.15;
 }
-.drawer__sum {
-  font-size: 15.5px;
+.page__sum {
+  font-size: 16px;
   color: var(--ink-2);
-  margin: -20px 0 0;
+  margin: 0 0 28px;
   line-height: 1.6;
 }
 
@@ -402,7 +357,8 @@ button { font-family: inherit; color: inherit; }
   border: 1px solid var(--line-2);
 }
 
-.drawer__sec h4 {
+.sec { margin-top: 32px; }
+.sec h4 {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.12em;
@@ -411,24 +367,33 @@ button { font-family: inherit; color: inherit; }
   margin: 0 0 14px;
   font-weight: 500;
 }
-.drawer__sec p {
+.sec p {
   font-size: 15px;
   line-height: 1.7;
   color: var(--ink-2);
   margin: 0;
   white-space: pre-wrap;
 }
-.drawer__grid {
+.photos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
-@media (max-width: 600px) { .drawer__grid { grid-template-columns: 1fr 1fr; } }
+.photos img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--bg-2);
+}
+@media (max-width: 600px) { .photos { grid-template-columns: 1fr 1fr; } }
 
-.drawer__foot {
+.page__foot {
   display: flex;
   gap: 10px;
   border-top: 1px solid var(--line);
+  margin-top: 32px;
   padding-top: 24px;
   flex-wrap: wrap;
 }
@@ -473,5 +438,4 @@ button { font-family: inherit; color: inherit; }
   .app { padding: 16px 16px 48px; }
   .filters__right { margin-left: 0; width: 100%; flex-wrap: wrap; }
   .search input { width: 100%; }
-  .drawer__top, .drawer__hero, .drawer__body { padding-left: 20px; padding-right: 20px; }
 }

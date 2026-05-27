@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import path from 'node:path';
 import { getDataDir } from './config.js';
+import adminRouter from './routes/api/admin.js';
 
 export function buildApp() {
   const app = express();
@@ -9,8 +10,14 @@ export function buildApp() {
   app.use(cookieParser());
 
   app.get('/api/health', (req, res) => res.json({ ok: true }));
+  app.use('/api/admin', adminRouter);
 
   app.use('/data', express.static(getDataDir()));
+
+  app.use((err, req, res, next) => {
+    const status = err.status || err.statusCode || 500;
+    res.status(status).send(err.message || 'Server Error');
+  });
 
   return app;
 }

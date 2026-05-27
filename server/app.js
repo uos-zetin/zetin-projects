@@ -4,6 +4,7 @@ import path from 'node:path';
 import { getDataDir } from './config.js';
 import adminRouter from './routes/api/admin.js';
 import projectsRouter from './routes/api/projects.js';
+import filesRouter from './routes/api/files.js';
 
 export function buildApp() {
   const app = express();
@@ -13,6 +14,7 @@ export function buildApp() {
   app.get('/api/health', (req, res) => res.json({ ok: true }));
   app.use('/api/admin', adminRouter);
   app.use('/api/projects', projectsRouter);
+  app.use('/api/files', filesRouter);
 
   app.use('/data', express.static(getDataDir()));
 

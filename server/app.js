@@ -18,6 +18,15 @@ export function buildApp() {
 
   app.use('/data', express.static(getDataDir()));
 
+  if (process.env.NODE_ENV === 'production') {
+    const dist = path.resolve(process.cwd(), 'dist');
+    app.use(express.static(dist));
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api') || req.path.startsWith('/data')) return next();
+      res.sendFile(path.join(dist, 'index.html'));
+    });
+  }
+
   app.use((err, req, res, next) => {
     const status = err.status || err.statusCode || 500;
     res.status(status).send(err.message || 'Server Error');

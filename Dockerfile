@@ -1,11 +1,19 @@
-FROM node:20-alpine AS builder
+# build client
+FROM node:20-bookworm-slim AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine AS product
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
+# runtime: express serves built client + api + data
+FROM node:20-bookworm-slim AS product
+WORKDIR /app
+ENV NODE_ENV=production
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY server ./server
+COPY --from=builder /app/dist ./dist
+ENV DATA_DIR=/app/data
+EXPOSE 8000
+CMD ["node", "server/index.js"]

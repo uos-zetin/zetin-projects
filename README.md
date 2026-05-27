@@ -21,3 +21,8 @@ projects.json 스키마는 설계 문서
 ## 배포
 멀티스테이지 `Dockerfile`로 이미지를 빌드해 nginx로 서빙한다. 서브도메인 라우팅·
 docker-compose·Rhymix 임베드는 Phase 2에서 구성한다.
+
+## 관리자 페이지
+- 개발: `npm run dev:full` (백엔드 8000 + 프론트 5173, /api 프록시). 관리자: http://localhost:5173/admin
+- 환경변수: `ADMIN_ID`(관리자 ZETIN 계정, 콤마 구분), `ZETIN_AUTH_HOST`(기본 auth.zetin.uos.ac.kr), `DATA_DIR`(기본 public/data), `PORT`(기본 8000)
+- 운영: `npm run build` 후 `node server/index.js` (Express가 dist + /api + /data 서빙). 배포는 Dockerfile 사용.

@@ -1,6 +1,7 @@
 import { useState, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useProjects } from './hooks/useProjects.js';
+import { useIframeAutoHeight } from './hooks/useIframeAutoHeight.js';
 import ListView from './components/ListView.jsx';
 import ProjectPage from './components/ProjectPage.jsx';
 
@@ -9,6 +10,7 @@ const AdminApp = lazy(() => import('./admin/AdminApp.jsx'));
 export default function App() {
   const { projects, loading, error } = useProjects();
   const [filter, setFilter] = useState({ category: '', year: '', query: '' });
+  useIframeAutoHeight();
 
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>

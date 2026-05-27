@@ -31,5 +31,5 @@ export function filterProjects(projects, { category, year, query } = {}) {
 }
 
 export function sortProjects(projects) {
-  return [...projects].sort((a, b) => (b.year ?? 0) - (a.year ?? 0));
+  return [...projects]; // 표시 순서 = 입력(배열) 순서. 정렬은 관리자 드래그로 결정.
 }

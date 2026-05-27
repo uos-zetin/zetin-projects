@@ -44,7 +44,12 @@ describe('filterProjects', () => {
 });
 
 describe('sortProjects', () => {
-  it('연도 내림차순으로 정렬한다(최신순)', () => {
+  it('입력(배열) 순서를 그대로 유지한다', () => {
     expect(sortProjects(sample).map((p) => p.id)).toEqual(['a', 'b', 'c']);
+  });
+  it('원본 배열을 변경하지 않는다', () => {
+    const copy = [...sample];
+    sortProjects(sample);
+    expect(sample).toEqual(copy);
   });
 });

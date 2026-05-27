@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
 import ProjectPage from './ProjectPage.jsx';
@@ -32,6 +33,38 @@ describe('ProjectPage', () => {
   it('목록으로 돌아가는 링크를 제공한다', () => {
     renderAt('/project/a', [project]);
     expect(screen.getByRole('link', { name: /목록으로/ })).toBeInTheDocument();
+  });
+
+  it('GitHub 링크는 아이콘 버튼으로 렌더링한다', () => {
+    const withGh = { ...project, links: [{ label: 'GitHub', url: 'https://github.com/uos-zetin/x' }] };
+    renderAt('/project/a', [withGh]);
+    const gh = screen.getByRole('link', { name: 'GitHub' });
+    expect(gh).toHaveClass('ghbtn');
+    expect(gh.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('프로젝트 개요는 마크다운을 렌더링한다', () => {
+    renderAt('/project/a', [{ ...project, description: '**굵게** 그리고 일반 텍스트' }]);
+    const strong = screen.getByText('굵게');
+    expect(strong.tagName).toBe('STRONG');
+  });
+
+  it('사진을 클릭하면 라이트박스로 크게 보이고 다음으로 넘길 수 있다', async () => {
+    const withPhotos = {
+      ...project,
+      thumbnail: 'data/images/a.png',
+      images: ['data/images/b.png', 'data/images/c.png'],
+    };
+    renderAt('/project/a', [withPhotos]);
+
+    const galleryB = screen.getAllByRole('img').find((i) => /b\.png/.test(i.getAttribute('src')));
+    await userEvent.click(galleryB);
+
+    const dialog = screen.getByRole('dialog', { name: '사진 크게 보기' });
+    expect(within(dialog).getByRole('img').getAttribute('src')).toMatch(/b\.png/);
+
+    await userEvent.click(within(dialog).getByRole('button', { name: '다음' }));
+    expect(within(dialog).getByRole('img').getAttribute('src')).toMatch(/c\.png/);
   });
 
   it('없는 id면 안내와 목록 링크를 보여준다', () => {

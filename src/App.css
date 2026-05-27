@@ -169,6 +169,7 @@ a { color: var(--link); }
   object-fit: cover;
   border-radius: 8px;
   background: var(--bg-soft);
+  cursor: zoom-in;
 }
 .page__title {
   font-size: 28px;
@@ -188,10 +189,51 @@ a { color: var(--link); }
 
 /* Sections */
 .sec { margin-top: 28px; }
-.sec h4 { font-size: 14px; color: var(--text-2); font-weight: 600; margin: 0 0 10px; }
-.sec p { font-size: 15px; line-height: 1.7; color: var(--text); margin: 0; white-space: pre-wrap; }
+.sec > h4 { font-size: 14px; color: var(--text-2); font-weight: 600; margin: 0 0 10px; }
+
+/* Markdown body (프로젝트 개요) */
+.md { font-size: 15px; line-height: 1.7; color: var(--text); }
+.md > :first-child { margin-top: 0; }
+.md > :last-child { margin-bottom: 0; }
+.md p { margin: 0 0 12px; }
+.md ul, .md ol { margin: 0 0 12px; padding-left: 22px; }
+.md li { margin: 2px 0; }
+.md li > p { margin: 0; }
+.md a { color: var(--link); }
+.md strong { font-weight: 600; }
+.md code {
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.92em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.md pre {
+  background: var(--bg-soft);
+  padding: 12px 14px;
+  border-radius: 8px;
+  overflow: auto;
+  margin: 0 0 12px;
+}
+.md pre code { background: none; padding: 0; }
+.md h1, .md h2, .md h3, .md h4, .md h5 { font-weight: 600; line-height: 1.3; margin: 18px 0 8px; }
+.md h1 { font-size: 20px; }
+.md h2 { font-size: 18px; }
+.md h3 { font-size: 16px; }
+.md h4, .md h5 { font-size: 15px; }
+.md blockquote {
+  margin: 0 0 12px;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid var(--line);
+  color: var(--text-2);
+}
+.md hr { border: none; border-top: 1px solid var(--line); margin: 18px 0; }
+.md table { border-collapse: collapse; margin: 0 0 12px; font-size: 14px; }
+.md th, .md td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; }
+.md th { background: var(--bg-soft); }
+.md img { max-width: 100%; border-radius: 8px; }
 .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.photos img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; background: var(--bg-soft); }
+.photos img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; background: var(--bg-soft); cursor: zoom-in; }
 @media (max-width: 560px) { .photos { grid-template-columns: 1fr 1fr; } }
 
 /* Links on detail page — plain text links */
@@ -199,3 +241,72 @@ a { color: var(--link); }
 .btn { font-size: 15px; text-decoration: none; color: var(--link); }
 .btn:hover { text-decoration: underline; }
 .btn--ghost, .btn--solid { border: none; background: transparent; padding: 0; }
+
+/* GitHub icon button */
+.ghbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  color: var(--text);
+  text-decoration: none;
+  background: #fff;
+}
+.ghbtn:hover { background: var(--bg-soft); border-color: #c6cacd; }
+.ghbtn svg { flex: none; }
+
+/* Lightbox (photo viewer) */
+.lb {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+.lb__img {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 4px;
+  cursor: default;
+}
+.lb__close,
+.lb__nav {
+  position: absolute;
+  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lb__close:hover,
+.lb__nav:hover { background: rgba(255, 255, 255, 0.28); }
+.lb__close { top: 16px; right: 16px; width: 40px; height: 40px; }
+.lb__nav { top: 50%; transform: translateY(-50%); width: 48px; height: 48px; font-size: 30px; line-height: 1; padding-bottom: 4px; }
+.lb__nav--prev { left: 16px; }
+.lb__nav--next { right: 16px; }
+.lb__count {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+@media (max-width: 560px) {
+  .lb__nav { width: 40px; height: 40px; font-size: 24px; }
+  .lb__nav--prev { left: 8px; }
+  .lb__nav--next { right: 8px; }
+}

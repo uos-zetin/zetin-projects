@@ -18,11 +18,17 @@ export default function ProjectForm({ project, onSave, onCancel }) {
     techCsv: joinCsv(project?.tech),
     thumbnail: project?.thumbnail || '',
     images: project?.images || [],
+    links: project?.links || [],
     featured: project?.featured || false,
   });
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const set = (k) => (v) => setF((s) => ({ ...s, [k]: v }));
+
+  const updateLink = (i, key, val) =>
+    setF((s) => ({ ...s, links: s.links.map((l, j) => (j === i ? { ...l, [key]: val } : l)) }));
+  const addLink = () => setF((s) => ({ ...s, links: [...s.links, { label: '', url: '' }] }));
+  const removeLink = (i) => setF((s) => ({ ...s, links: s.links.filter((_, j) => j !== i) }));
 
   const submit = async (e) => {
     e.preventDefault();
@@ -34,7 +40,8 @@ export default function ProjectForm({ project, onSave, onCancel }) {
       summary: f.summary, description: f.description,
       members: splitCsv(f.membersCsv), tech: splitCsv(f.techCsv),
       thumbnail: f.thumbnail || undefined, images: f.images,
-      links: project?.links || [], featured: f.featured,
+      links: f.links.map((l) => ({ label: l.label.trim(), url: l.url.trim() })).filter((l) => l.url),
+      featured: f.featured,
     };
     setBusy(true);
     try {
@@ -58,6 +65,29 @@ export default function ProjectForm({ project, onSave, onCancel }) {
       <MarkdownField label="개요" value={f.description} onChange={set('description')} />
       <ImageUploadField label="대표 이미지" projectId={f.id} value={f.thumbnail} onChange={set('thumbnail')} />
       <ImageUploadField label="갤러리 이미지" projectId={f.id} value={f.images} multiple onChange={set('images')} />
+
+      <div className="links-field">
+        <span className="links-field__label">링크</span>
+        {f.links.map((l, i) => (
+          <div className="links-field__row" key={i}>
+            <input
+              placeholder="라벨"
+              aria-label={`링크 라벨 ${i + 1}`}
+              value={l.label}
+              onChange={(e) => updateLink(i, 'label', e.target.value)}
+            />
+            <input
+              placeholder="https://..."
+              aria-label={`링크 URL ${i + 1}`}
+              value={l.url}
+              onChange={(e) => updateLink(i, 'url', e.target.value)}
+            />
+            <button type="button" onClick={() => removeLink(i)} aria-label="링크 삭제">삭제</button>
+          </div>
+        ))}
+        <button type="button" className="links-field__add" onClick={addLink}>+ 링크 추가</button>
+      </div>
+
       <label className="project-form__check">
         <input type="checkbox" checked={f.featured} onChange={(e) => set('featured')(e.target.checked)} />추천
       </label>

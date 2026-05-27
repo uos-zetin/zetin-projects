@@ -22,4 +22,29 @@ describe('ProjectForm', () => {
     render(<ProjectForm project={{ id: 'a', title: 'A' }} onSave={() => {}} onCancel={() => {}} />);
     expect(screen.getByLabelText('ID')).toBeDisabled();
   });
+
+  it('링크를 추가해 입력하면 onSave payload에 포함된다', async () => {
+    const onSave = vi.fn(() => Promise.resolve());
+    render(<ProjectForm onSave={onSave} onCancel={() => {}} />);
+    await userEvent.type(screen.getByLabelText('ID'), 'bot');
+    await userEvent.type(screen.getByLabelText('제목'), '봇');
+    await userEvent.click(screen.getByRole('button', { name: '+ 링크 추가' }));
+    await userEvent.type(screen.getByPlaceholderText('라벨'), 'GitHub');
+    await userEvent.type(screen.getByPlaceholderText('https://...'), 'https://github.com/uos-zetin/x');
+    await userEvent.click(screen.getByRole('button', { name: '저장' }));
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({
+      links: [{ label: 'GitHub', url: 'https://github.com/uos-zetin/x' }],
+    }));
+  });
+
+  it('URL이 빈 링크 행은 저장 시 제외된다', async () => {
+    const onSave = vi.fn(() => Promise.resolve());
+    render(<ProjectForm onSave={onSave} onCancel={() => {}} />);
+    await userEvent.type(screen.getByLabelText('ID'), 'bot');
+    await userEvent.type(screen.getByLabelText('제목'), '봇');
+    await userEvent.click(screen.getByRole('button', { name: '+ 링크 추가' }));
+    await userEvent.type(screen.getByPlaceholderText('라벨'), '라벨만');
+    await userEvent.click(screen.getByRole('button', { name: '저장' }));
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ links: [] }));
+  });
 });

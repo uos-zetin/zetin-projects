@@ -68,10 +68,23 @@ newcompetition의 인증 코드를 거의 그대로 이식한다.
 - `PATCH /api/projects/:id` 🔒 — 부분 수정.
 - `DELETE /api/projects/:id` 🔒 — 삭제(연결 이미지 파일 정리는 선택).
 - `PUT /api/projects/order` 🔒 — `["id1","id2",...]` 순서로 배열 재배치.
-- `POST /api/files` 🔒 — `multipart/form-data` 이미지 업로드. `data/images/<projectId>/<파일명>`에 저장하고 `data/images/...` 상대경로 반환. 허용 확장자·용량 제한 검증.
+- `POST /api/files` 🔒 — `multipart/form-data` 이미지 업로드. **WebP 자동 변환 + 원본 보존**(아래 5.1 참고). 변환된 WebP의 `data/images/...` 상대경로를 반환.
 - 저장은 **원자적 쓰기**(temp 파일 작성 후 rename). 동시 쓰기는 프로세스 내 간단한 직렬화(쓰기 큐/뮤텍스)로 보호.
 
 오류는 newcompetition처럼 `http-errors`로 상태코드+메시지 응답.
+
+### 5.1 이미지 처리 (WebP 자동 변환 + 원본 보존)
+
+업로드된 이미지는 서버에서 [`sharp`](https://sharp.pixelplumbing.com/)로 처리한다.
+
+- **변환**: WebP로 변환, **최대 폭/높이 1600px로 축소(확대 안 함)**, **품질 80**.
+- **원본 보존**: 업로드한 원본 파일은 그대로 별도 보관한다.
+- **저장 레이아웃**:
+  - 변환본(웹 표시용): `data/images/<projectId>/<name>.webp` ← projects.json이 참조
+  - 원본(백업): `data/images/<projectId>/originals/<name>.<원본확장자>`
+- **예외**: SVG·GIF 등 래스터 변환이 부적절한 형식은 변환을 건너뛰고 원본 경로를 그대로 사용한다.
+- **검증**: 허용 형식(jpg/jpeg/png/webp/…)과 최대 업로드 용량을 확인하고, 위반 시 4xx 응답.
+- 의존성 `sharp`는 네이티브 모듈이므로 Dockerfile 빌드 단계에서 설치된다(플랫폼 prebuilt 사용).
 
 ## 6. 데이터 모델
 
@@ -84,7 +97,7 @@ newcompetition의 인증 코드를 거의 그대로 이식한다.
 
 - **로그인 화면**: ZETIN id/pw 입력 → `/api/admin/signin`. 실패 메시지 표시. `GET /api/admin/status`로 진입 시 로그인 상태 확인. 미인증이면 관리 화면 비노출.
 - **목록·관리 화면**: 프로젝트 목록(행/카드), **드래그로 순서 변경**(저장 시 `PUT /api/projects/order`), 항목별 "수정"·"삭제", "새 프로젝트".
-- **편집 폼**: `title, category, year, summary, members, tech, links` 입력 + **마크다운 편집기 + 실시간 미리보기**(description) + **이미지 업로드**(thumbnail, images 갤러리; 드롭/선택 → `POST /api/files` → 경로 자동 반영) + 저장(`POST`/`PATCH`).
+- **편집 폼**: `title, category, year, summary, members, tech, links` 입력 + **마크다운 편집기 + 실시간 미리보기**(description) + **이미지 업로드**(thumbnail, images 갤러리; 드롭/선택 → `POST /api/files` → **자동 WebP 변환·원본 보존** 후 변환 경로가 폼에 자동 반영) + 저장(`POST`/`PATCH`).
 - 관리자 UI는 **코드 스플리팅(lazy-load)**으로 분리해 공개 번들 크기에 영향 없게 한다.
 - 마크다운 미리보기는 공개 상세와 동일 렌더러(react-markdown + remark-gfm + remark-breaks) 사용.
 
@@ -116,5 +129,5 @@ newcompetition의 인증 코드를 거의 그대로 이식한다.
 ## 12. 미해결 / 확인 필요
 
 - `ADMIN_ID`에 넣을 실제 관리자 ZETIN 계정 목록.
-- newcompetition이 사용하는 인증 의존성 버전(`jsonwebtoken`, `jwk-to-pem`, `axios`) 확인 및 도입.
-- 이미지 업로드 허용 형식·최대 용량 정책.
+- newcompetition이 사용하는 인증 의존성 버전(`jsonwebtoken`, `jwk-to-pem`, `axios`) 및 이미지 처리(`sharp`) 도입.
+- 이미지 업로드 허용 형식·최대 업로드 용량의 최종 정책(기본 제안: jpg/png/webp 허용, WebP 1600px·품질 80, 업로드 상한 예: 20MB).

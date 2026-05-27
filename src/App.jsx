@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useProjects } from './hooks/useProjects.js';
 import ListView from './components/ListView.jsx';
 import ProjectPage from './components/ProjectPage.jsx';
+
+const AdminApp = lazy(() => import('./admin/AdminApp.jsx'));
 
 export default function App() {
   const { projects, loading, error } = useProjects();
@@ -27,6 +29,14 @@ export default function App() {
           <Route
             path="/project/:id"
             element={<ProjectPage projects={projects} loading={loading} error={error} />}
+          />
+          <Route
+            path="/admin/*"
+            element={
+              <Suspense fallback={<p className="empty">관리자 로딩 중…</p>}>
+                <AdminApp />
+              </Suspense>
+            }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

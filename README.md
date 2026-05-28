@@ -98,9 +98,11 @@ ADMIN_ID="zetin,tjdgh2626" npm run dev:full
 - **코드 갱신 재배포(서버)**: `cd /srv/server-zetin-projects && git -C repository pull && docker compose up -d --build`
 - **Rhymix 임베드**(공개 페이지에 붙이는 코드):
   ```html
-  <iframe onload="iFrameResize({ bodyMargin: '0 0 24px 0' })" src="https://projects.zetin.uos.ac.kr/" style="min-width:100%; border:0;"></iframe>
+  <iframe onload="iFrameResize({ heightCalculationMethod: 'lowestElement', bodyMargin: '0 0 24px 0' })" src="https://projects.zetin.uos.ac.kr/" style="min-width:100%; border:0;"></iframe>
   ```
-  편집은 임베드 안이 아니라 `/admin`으로 직접 접속해서 합니다.
+  - 높이는 iframe-resizer로 자동 조절된다. 앱에도 `useIframeAutoHeight` 훅이 있어 내용이 비동기로 채워지면 부모에 높이를 다시 알린다.
+  - ⚠️ **Rhymix에 "모바일 전용 레이아웃"이 켜져 있으면** 그 레이아웃엔 iframe-resizer 라이브러리(`zetin-layout`의 `iframeResizer.min.js`)가 없어 모바일에서 임베드 높이가 안 맞을 수 있다 → 모바일에서도 PC(`zetin-layout`)를 쓰도록 **모바일 레이아웃을 비활성**할 것.
+  - 편집은 임베드 안이 아니라 `/admin`으로 직접 접속해서 한다.
 
 ## 문서
 
